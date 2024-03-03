@@ -56,5 +56,5 @@ int main() {
     PasswordsFile.close();
 
     //Notify user password successfully generated
-    cout << "\nSuccess! Password is " << password << endl;
+    cout << "\nSuccess! Your random password is " << password << endl;
 }
