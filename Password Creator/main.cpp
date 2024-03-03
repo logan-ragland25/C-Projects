@@ -23,7 +23,7 @@ int main() {
     getline(cin, username);
 
     //Get Password Length
-    cout << "\nPlease enter the length of your password (Must be between 8 and 32 characters):\n\t";
+    cout << "\nPlease enter the length of your password (Must be between 8 and 32 characters):\n\t-";
     getline(cin, pLengthInput);
     try { pLength = stoi(pLengthInput); }
     catch (exception e) { }
