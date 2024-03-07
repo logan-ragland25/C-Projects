@@ -59,6 +59,7 @@
         "optional": "cpp",
         "ratio": "cpp",
         "sstream": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "list": "cpp"
     }
 }

@@ -30,7 +30,7 @@
 				"-std=c++20",
 				"${fileDirname}\\*.cpp",
 				"-o",
-				"${workspaceRoot}\\larry.exe"
+				"larry.exe"
 			],
 			"options": {
 				"cwd": "${fileDirname}"
@@ -50,10 +50,10 @@
 				"/std:c++latest",
 				"/EHsc",
 				"${fileDirname}\\*.cpp",
-				"/Fe${workspaceRoot}\\larry.exe",
+				"/Fe${fileDirname}\\larry.exe",
 			],
 			"options": {
-				"cwd": "${workspaceRoot}"
+				"cwd": "${fileDirname}"
 			},
 			"problemMatcher": [
 				"$msCompile"
