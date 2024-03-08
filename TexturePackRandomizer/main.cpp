@@ -5,12 +5,15 @@ using namespace std;
 #include <filesystem>
 namespace fs = std::filesystem;
 #include <direct.h>
+#include <vector>
 #include <map>
 //Key - Value Pairs Here:
 //https://en.cppreference.com/w/cpp/container/map
 
 //Declare Variables
 void Randomize();
+void RandomizeNonFolderDirectories();
+
 string path;
 string texturePackName;
 
@@ -52,14 +55,43 @@ void Randomize() {
 }
 
 void RandomizeNonFolderDirectories() {
+    //Declare Random Variables
+    string pathToTextures = path + "\\randomizedTexturePacks\\" + texturePackName + "\\assets\\minecraft\\textures\\";
     list<string> foldersToRandomize = {"block", "colormap", "environment", "font", "item", "map", "misc", "mob_effect", "models\\armor", "painting", 
         "particle", "trims\\color_palettes", "trims\\items", "trims\\models\\armor"};
 
-    foreach (foldersToRandomize as folder) {
-        string transfer = "";
+    //Seed Random Numbers
+    srand((unsigned) time(NULL));
+    
+    for (auto folder = foldersToRandomize.begin(); folder != foldersToRandomize.end(); folder++) {
+        //Declare Variables
+        string originalFileName, randomFileName = "";
+        vector <string> fileNames;
+        string directoryPath = pathToTextures + *folder + "\\";
 
-        for (auto const& dir_entry : std::filesystem::directory_iterator{path + "\\randomizedTexturePacks\\" + texturePackName + "\\assets\\minecraft\\" + foldersToRandomize.at(folder)}) {
+        //Get files in directory and add them to vector
+        for (auto const& file : fs::directory_iterator{ pathToTextures + *folder}) { fileNames.push_back(fs::path(file).filename().generic_string()); }
 
+        for (auto const& file : fs::directory_iterator{ pathToTextures + *folder}) {
+            originalFileName = fs::path(file).filename().generic_string();
+            int randomFile = rand() % fileNames.size();
+            randomFileName = fileNames[randomFile];
+
+            string placeholder = "placeholder.png";
+            //Make sure randomly selected file is not the same as the original file
+            while (originalFileName == randomFileName) { 
+                randomFile = rand() % fileNames.size();
+                randomFileName = fileNames[randomFile];
+            }
+
+            //Rename original file to placeholder so there are no duplicated names
+            //Set the randomly selected file's name to the original file
+            //Set the original file to the randomly selected file's name
+            cout << rename((directoryPath + originalFileName).c_str(), (directoryPath + placeholder).c_str()) << endl;
+            cout << rename((directoryPath + randomFileName).c_str(), (directoryPath + originalFileName).c_str()) << endl;
+            cout << rename((directoryPath + "placeholder.png").c_str(), (directoryPath + randomFileName).c_str()) << "\n" << endl;
         }
     }
+    
+    return;
 }
