@@ -1,0 +1,3 @@
+To use this program, simply run the executable and it should create a brand new zipped texture pack for you, you just need to actually transfer it to minecraft.
+This does not randomize everything. It randomizes them based on subsection (like blocks, mobs, gui).
+It also does not randomize banners, pottery, or extra texture on shields, as they took up far too many texture spots and make the texture packs far less fun to use.
