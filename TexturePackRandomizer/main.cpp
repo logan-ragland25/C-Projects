@@ -7,15 +7,10 @@ namespace fs = std::filesystem;
 #include <direct.h>
 #include <vector>
 #include <map>
-//Key - Value Pairs Here:
-//https://en.cppreference.com/w/cpp/container/map
 
 //Declare Variables
 int Randomize();
-void RandomizeNonFolderDirectories();
 void addAllFilesToMap(string, map<string, string>*, vector<string>*);
-void RandomizeMobs();
-void RandomizeGUI();
 
 string path;
 string texturePackName;
@@ -64,7 +59,8 @@ int Randomize() {
         
         addAllFilesToMap(directoryPath, &filePaths, &fileNames);
 
-        for (const auto & [key, value] : filePaths) {
+        for (const auto & [key, value] : filePaths) { 
+            //Declare Variables
             string originalFileName, randomFileName, placeholder = "";
             originalFileName = key;
             randomFileName = fileNames[rand() % fileNames.size()];
@@ -88,12 +84,18 @@ int Randomize() {
 }
 
 void addAllFilesToMap(string path, map<string, string>* map, vector<string>* fileNames){
+    //Recurseively loop through directory
     for (auto const& recursiveFile : fs::recursive_directory_iterator(path)) { 
         int count = 0;
+
+        //Count files/folders in directory
         try { if (is_directory(recursiveFile)) { for (auto const&  file : fs::directory_iterator{ recursiveFile }) { count++; } } } 
         catch (exception e) { cout << e.what() << endl; }
+
+        //Recursively call function to get to all files
         if (count > 1) addAllFilesToMap(recursiveFile.path().string(), map, fileNames);
 
+        //Add files to map and vector
         if (!is_directory(recursiveFile)) {
             (*map)[recursiveFile.path().filename().string()] = recursiveFile.path().string();
             (*fileNames).push_back(recursiveFile.path().filename().string());
