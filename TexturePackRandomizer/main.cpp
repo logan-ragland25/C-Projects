@@ -24,8 +24,6 @@ int main() {
     //Store path to project
     char buffer[256];
     path = getcwd(buffer, sizeof(buffer));
-
-    if (Randomize() == 1) cout << "success!" << endl;
     return 0;
 }
 
@@ -57,7 +55,7 @@ int Randomize() {
     
     //Seed Random Numbers
     srand((unsigned) time(NULL));
-    
+
     for (auto const&  folder : fs::directory_iterator{ path + "\\randomizedTexturePacks\\" + texturePackName + "\\assets\\minecraft\\textures\\" }) { 
         //Declare Variables
         string directoryPath = folder.path().generic_string();
