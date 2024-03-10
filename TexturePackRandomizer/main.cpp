@@ -19,6 +19,9 @@ int main() {
     //Store path to project
     char buffer[256];
     path = getcwd(buffer, sizeof(buffer));
+    
+    Randomize();
+    
     return 0;
 }
 
