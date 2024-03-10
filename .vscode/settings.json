@@ -61,6 +61,8 @@
         "sstream": "cpp",
         "vector": "cpp",
         "list": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "codecvt": "cpp",
+        "map": "cpp"
     }
 }
