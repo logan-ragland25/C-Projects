@@ -57,115 +57,37 @@ int Randomize() {
     
     //Seed Random Numbers
     srand((unsigned) time(NULL));
-
-    RandomizeNonFolderDirectories();
-    RandomizeMobs();
-    RandomizeGUI();
-    return 0;
-}
-
-void RandomizeNonFolderDirectories() {
-    //Declare Variables
-    string pathToTextures = path + "\\randomizedTexturePacks\\" + texturePackName + "\\assets\\minecraft\\textures\\";
-    list<string> foldersToRandomize = {"block", "colormap", "environment", "font", "item", "map", "misc", "mob_effect", "models\\armor", "painting", 
-        "particle", "trims\\color_palettes", "trims\\items", "trims\\models\\armor"};
-
-    for (auto folder = foldersToRandomize.begin(); folder != foldersToRandomize.end(); folder++) {
+    
+    for (auto const&  folder : fs::directory_iterator{ path + "\\randomizedTexturePacks\\" + texturePackName + "\\assets\\minecraft\\textures\\" }) { 
         //Declare Variables
-        string originalFileName, randomFileName = "";
+        string directoryPath = folder.path().generic_string();
+        map<string, string> filePaths;
         vector <string> fileNames = {};
-        string directoryPath = pathToTextures + *folder + "\\";
+        
+        addAllFilesToMap(directoryPath, &filePaths, &fileNames);
 
-        //Get files in directory and add them to vector
-        for (auto const& file : fs::directory_iterator{ pathToTextures + *folder}) { fileNames.push_back(fs::path(file).filename().generic_string()); }
+        for (const auto & [key, value] : filePaths) {
+            string originalFileName, randomFileName, placeholder = "";
+            originalFileName = key;
+            randomFileName = fileNames[rand() % fileNames.size()];
 
-        for (auto const& file : fs::directory_iterator{ pathToTextures + *folder}) {
-            originalFileName = fs::path(file).filename().generic_string();
-            int randomFile = rand() % fileNames.size();
-            randomFileName = fileNames[randomFile];
-
-            string placeholder = "placeholder.png";
+            placeholder = "placeholder.png";
+            
             //Make sure randomly selected file is not the same as the original file
-            while (originalFileName == randomFileName) { 
-                randomFile = rand() % fileNames.size();
-                randomFileName = fileNames[randomFile];
-            }
+            while (originalFileName == randomFileName) {  randomFileName = fileNames[rand() % fileNames.size()]; }
 
             //Rename original file to placeholder so there are no duplicated names
             //Set the randomly selected file's name to the original file
             //Set the original file to the randomly selected file's name
-            rename((directoryPath + originalFileName).c_str(), (directoryPath + placeholder).c_str());
-            rename((directoryPath + randomFileName).c_str(), (directoryPath + originalFileName).c_str());
-            rename((directoryPath + "placeholder.png").c_str(), (directoryPath + randomFileName).c_str());
+            rename((value).c_str(), (directoryPath + placeholder).c_str());
+            rename((filePaths[randomFileName]).c_str(), (value).c_str());
+            rename((directoryPath + "placeholder.png").c_str(), (filePaths[randomFileName]).c_str());
         }
+
     }
-    cout << "Majority of Textures Successfully Randomized!" << endl;
-    return;
+    cout << "All Textures Successfully Randomized!" << endl;
+    return 0;
 }
-
-void RandomizeMobs() {
-    //Declare Variables
-    string directoryPath = path + "\\randomizedTexturePacks\\" + texturePackName + "\\assets\\minecraft\\textures\\entity\\";
-    map<string, string> filePaths;
-    vector <string> fileNames = {};
-    
-    addAllFilesToMap(directoryPath, &filePaths, &fileNames);
-
-    for (const auto & [key, value] : filePaths) {
-        string originalFileName, randomFileName, placeholder = "";
-        originalFileName = key;
-        randomFileName = fileNames[rand() % fileNames.size()];
-
-        placeholder = "placeholder.png";
-        
-        //Make sure randomly selected file is not the same as the original file
-        while (originalFileName == randomFileName) { 
-            randomFileName = fileNames[rand() % fileNames.size()];
-        }
-
-        //Rename original file to placeholder so there are no duplicated names
-        //Set the randomly selected file's name to the original file
-        //Set the original file to the randomly selected file's name
-        rename((value).c_str(), (directoryPath + placeholder).c_str());
-        rename((filePaths[randomFileName]).c_str(), (value).c_str());
-        rename((directoryPath + "placeholder.png").c_str(), (filePaths[randomFileName]).c_str());
-    }
-
-    cout << "Mob Textures Successfully Randomized!" << endl;
-    return;
-}
-
-void RandomizeGUI() {
-    //Declare Variables
-    string directoryPath = path + "\\randomizedTexturePacks\\" + texturePackName + "\\assets\\minecraft\\textures\\gui\\";
-    map<string, string> filePaths;
-    vector <string> fileNames = {};
-    
-    addAllFilesToMap(directoryPath, &filePaths, &fileNames);
-
-    for (const auto & [key, value] : filePaths) {
-        string originalFileName, randomFileName, placeholder = "";
-        originalFileName = key;
-        randomFileName = fileNames[rand() % fileNames.size()];
-
-        placeholder = "placeholder.png";
-        
-        //Make sure randomly selected file is not the same as the original file
-        while (originalFileName == randomFileName) { 
-            randomFileName = fileNames[rand() % fileNames.size()];
-        }
-
-        //Rename original file to placeholder so there are no duplicated names
-        //Set the randomly selected file's name to the original file
-        //Set the original file to the randomly selected file's name        
-        rename((value).c_str(), (directoryPath + placeholder).c_str());
-        rename((filePaths[randomFileName]).c_str(), (value).c_str());
-        rename((directoryPath + "placeholder.png").c_str(), (filePaths[randomFileName]).c_str());
-    }
-
-    cout << "GUI Textures Successfully Randomized!" << endl;
-    return;
-} 
 
 void addAllFilesToMap(string path, map<string, string>* map, vector<string>* fileNames){
     for (auto const& recursiveFile : fs::recursive_directory_iterator(path)) { 
