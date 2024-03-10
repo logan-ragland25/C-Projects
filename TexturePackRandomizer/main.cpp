@@ -20,12 +20,6 @@ int main() {
     char buffer[256];
     path = getcwd(buffer, sizeof(buffer));
     
-    Randomize();
-    
-    return 0;
-}
-
-int Randomize() {
     //Store what user wants pack to be called
     cout << "What do you want to call this texture pack?\n\t";
     getline(cin, texturePackName);
@@ -60,6 +54,7 @@ int Randomize() {
         map<string, string> filePaths;
         vector <string> fileNames = {};
         
+        //Call function that adds values to map and vector
         addAllFilesToMap(directoryPath, &filePaths, &fileNames);
 
         for (const auto & [key, value] : filePaths) { 
